@@ -1,43 +1,41 @@
-#include <cstdio>
-#include <iostream>
-#include <cstdlib>
+#include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 #include "./index.h"
 
 using namespace std;
 
-/*  
-    Método de Newton-Rhapson para o calculo de raízes reais de polinômios.
+/* 
+    método que calcula newton-raphson para números reais
 */
+float newton(float x, float accuracy, int maxInteraction, polynomial p) {
 
-float newton(float x, float accuracy, int max, polynomial p){
-
+    //polinômio de resposta
     polynomial p2 = detPolynomial(p);
-
     float x1;
-    
-    float currentAcc;
-    
-    float flag = calcPolynomial(p2, x);
-    if(flag != 0){
-        x1 = x - (calcPolynomial(p, x)) / flag;
-    }else{
-        printf("Impossível dividir por 0");
-        exit(5);
-    }
-    for(int i = 0; i <= max; i++){
-        if(currentAcc >= accuracy){
-            x = x1;
+    float currentAcc = 0;
+
+    for (int i = 0; i < maxInteraction; i++) {
+
+        float flag = calcPolynomial(p2, x);
+
+        //verifica para não dividir por 0
+        if (flag != 0) {
             x1 = x - calcPolynomial(p, x) / flag;
-            currentAcc = abs(x1 - x);
-        }else{
-            cout << x1 << endl;
-            exit(0);
-            return x1;
-        }                                                        
+
+            /* 
+                definindo a nova acuracia.
+                Tem que utilizar fabs pq estamos lidando com um float.
+            */
+            currentAcc = fabs(x1 - x);
+            x = x1;
+            if (currentAcc < accuracy) {
+                return x1;
+            }
+        } else {
+            printf("Impossível dividir por 0");
+            exit(5);
+        }
     }
-    cout << x1 <<endl;
-    exit(0);
     return x1;
-    
 }

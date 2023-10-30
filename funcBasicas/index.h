@@ -30,5 +30,6 @@ void freePolynomial(polynomial p);
 void getPolynomialFromFile(polynomial p, const char * file);
 float calcPolynomial(polynomial p, float x);
 void showPolynomial(polynomial p);
+int countLines(const char *file);
 
 #endif //aqui termina a inclusão que deve ser feita vinda deste .h caso ela já não tenha sido feita

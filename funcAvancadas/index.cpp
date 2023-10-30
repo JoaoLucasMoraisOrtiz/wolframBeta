@@ -1,6 +1,5 @@
-#include <cstdio>
-#include <iostream>
-#include <cstdlib>
+#include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "./index.h"
 
@@ -28,7 +27,6 @@ polynomial intPolynomial(polynomial p, float c){
 
 float intDefPolynomial(polynomial p, float x0, float x1){
     polynomial integ = intPolynomial(p,0);
-    showPolynomial(integ);
     float r;
     r = calcPolynomial(integ, x1) - calcPolynomial(integ, x0);
     freePolynomial(integ);

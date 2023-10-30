@@ -24,7 +24,7 @@ FILE *privateOpenFile(string dir)
     FILE *f = fopen(dir.c_str(), "r");
     if (f == NULL)
     {
-        cout << "O arquivo não foi encontrado";
+        printf("O arquivo não foi encontrado");
         exit(2);
     }
     return f;
@@ -44,7 +44,7 @@ float privateStrToFloat(int c, FILE *f, polynomial p)
     // a mesma coisa de comparar como NULL, somente para que o compilador não de warning;
     if (l[0] == '\0')
     {
-        cout << "O tamanho do polinômio é inferior a quantidade de dados do arquivo.";
+        printf("O tamanho do polinômio é inferior a quantidade de dados do arquivo.");
         exit(3);
     }
 
@@ -277,7 +277,7 @@ polynomial newPolynomial(int g)
 
     if (p.a == NULL)
     {
-        cout << "erro na alocação da memória...";
+        printf("erro na alocação da memória...");
         // erro diferente de 0 para identificar que o programa terminou com um erro, e não com sucesso.
         // preferi utilizar exit() para mostrar exatamente que foi um erro, e para não ficar lidando com um else gigantesco
         exit(1);
@@ -305,26 +305,32 @@ void freePolynomial(polynomial p)
     }
 }
 
+int countLines(const char *dir){
+    // tamanho máximo de uma linha,pois não sabemos qual número vamos encontrar no arquivo (fonte Microsoft).
+    char l[240];
+    int nlines = 0;
+    FILE *f = privateOpenFile(dir);
+    while (fgets(l, sizeof(l), f) != NULL)
+    {   
+        nlines += 1;
+    }
+    fclose(f);
+    return nlines;
+}
+
 // declarado como constante pois quando o C++ fazum c_str() ele transforma em constante, não em variável.
 void getPolynomialFromFile(polynomial p, const char *file)
 {
     FILE *f = privateOpenFile(file);
 
-    // tamanho máximo de uma linha,pois não sabemos qual número vamos encontrar no arquivo (fonte Microsoft).
-    char l[240];
-
-    int nlines = 0;
-    while (fgets(l, sizeof(l), f) != NULL)
-    {
-        nlines += 1;
-    }
+    int nlines = countLines(file);
 
     // reseta o fgets
     fseek(f, 0, SEEK_SET);
 
     if (p.n != nlines - 1)
     {
-        cout << "O arquivo não possuí uma quantidade de dados diferêntes do necessário em: " << p.n - nlines - 1 << " parâmetros.";
+        printf("O arquivo não possuí uma quantidade de dados diferêntes do necessário em: %d parâmetros.", p.n - nlines - 1);
         exit(4);
     }
     int leng = 0;
@@ -340,7 +346,6 @@ float calcPolynomial(polynomial p, float x){
     for (int c = 0; c <= p.n; c++)
     {   
         result += p.a[c] * pow(x, c);
-        cout << p.a[c] << " * " << x << "^" << c << " += " << result << endl;
     }
     return result;
 }
@@ -349,7 +354,8 @@ void showPolynomial(polynomial p)
 {
     for (int i = 0; i <= p.n; i++)
     {
-        cout << p.a[i] << "x^" << i << ' ';
+
+        printf("%fx^%d ", p.a[i], i);
     }
-    cout << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n";
+    printf("\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
 }
